@@ -32,7 +32,6 @@ task copyAllDependencies(dependsOn: 'clean') {
                         group: artifact.moduleVersion.id.group,
                         name: artifact.moduleVersion.id.name,
                         version: artifact.moduleVersion.id.version,
-                        classifier: artifact.classifier,
                         ext: 'pom'
                 )
             }
