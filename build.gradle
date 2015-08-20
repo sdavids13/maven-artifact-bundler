@@ -17,7 +17,7 @@ task copyAllDependencies(dependsOn: 'clean') {
         if(!project.hasProperty("artifact")) {
             throw new InvalidUserDataException("Please specify the artifact you would like to download via: -Partifact=groupId:artifactId:version")
         }
-        dependencies.runtime "${artifact}"
+        dependencies.runtime "${artifact}".split(",\\s*")
         def artifacts = configurations.runtime.resolvedConfiguration.resolvedArtifacts.flatten()
         artifacts.each { artifact ->
             dependencies {
