@@ -2,8 +2,12 @@
 ext.packageDir = "${buildDir}/packages"
 
 repositories {
-    mavenCentral()
-    jcenter()
+    maven {
+        url "http://repo1.maven.org/maven2/"
+    }
+    maven {
+        url "http://jcenter.bintray.com/"
+    }
 }
 
 configurations {
@@ -54,6 +58,6 @@ task bundle(type: Zip, dependsOn: 'copyAllDependencies') {
     destinationDir file("${buildDir}")
     from "${buildDir}/packages"
     doFirst {
-        baseName "${artifact}-maven-bundle"
+        baseName "${artifact.replace(':', '-')}-maven-bundle"
     }
 }
