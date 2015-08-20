@@ -1,0 +1,60 @@
+
+ext.packageDir = "${buildDir}/packages"
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+configurations {
+    runtime
+    repo
+}
+
+task copyAllDependencies(dependsOn: 'clean') {
+    outputs.dir "${packageDir}"
+    doFirst {
+        if(!project.hasProperty("artifact")) {
+            throw new InvalidUserDataException("Please specify the artifact you would like to download via: -Partifact=groupId:artifactId:version")
+        }
+        dependencies.runtime "${artifact}"
+        def artifacts = configurations.runtime.resolvedConfiguration.resolvedArtifacts.flatten()
+        artifacts.each { artifact ->
+            dependencies {
+                repo (
+                        group: artifact.moduleVersion.id.group,
+                        name: artifact.moduleVersion.id.name,
+                        version: artifact.moduleVersion.id.version,
+                        classifier: artifact.classifier,
+                        ext: artifact.extension
+                )
+                repo (
+                        group: artifact.moduleVersion.id.group,
+                        name: artifact.moduleVersion.id.name,
+                        version: artifact.moduleVersion.id.version,
+                        classifier: artifact.classifier,
+                        ext: 'pom'
+                )
+            }
+        }
+        configurations.repo.resolvedConfiguration.resolvedArtifacts.each { artifact ->
+            println "Added artifact ${artifact.moduleVersion.id}:${artifact.extension}"
+            copy {
+                from artifact.file
+                into "${packageDir}/${artifact.moduleVersion.id.group.replace('.', "/")}/${artifact.moduleVersion.id.name}/${artifact.moduleVersion.id.version}"
+            }
+        }
+    }
+}
+
+task clean(type: Delete) {
+    delete "${buildDir}"
+}
+
+task bundle(type: Zip, dependsOn: 'copyAllDependencies') {
+    destinationDir file("${buildDir}")
+    from "${buildDir}/packages"
+    doFirst {
+        baseName "${artifact}-maven-bundle"
+    }
+}
