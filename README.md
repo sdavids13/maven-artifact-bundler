@@ -8,7 +8,7 @@ This project allows clients provide a maven artifact via the `artifact` system o
 
 ## Execution
 Example execution: `./gradlew -Partifact=com.netflix.nebula:gradle-ospackage-plugin:2.2.6 bundle`
-this produces an output `com.netflix.nebula:gradle-ospackage-plugin:2.2.6-maven-bundle.zip` in the `build` directory.
+this produces an output `com.netflix.nebula-gradle-ospackage-plugin-2.2.6-maven-bundle.zip` in the `build` directory.
 
 Note: the `artifact` syntax is in the format of `<group id>:<artifact id>:<version>` and can specify multiple
 artifacts via a comma separated list.
